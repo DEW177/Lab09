@@ -13,28 +13,23 @@ public class DepositService {
     private final AccountRepository accountRepository;
     private final DepositRepository depositRepository;
 
-    public DepositService(AccountRepository accountRepository,
-                          DepositRepository depositRepository) {
+    public DepositService(AccountRepository accountRepository, DepositRepository depositRepository) {
         this.accountRepository = accountRepository;
         this.depositRepository = depositRepository;
     }
 
     @Transactional
-    public void deposit(Long accountId, double amount) {
-
-        // 1. ค้นหาบัญชี
+    public void deposit(Long accountId, Double amount) {
+        // 1. ค้นหา Account จาก accountId
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new RuntimeException("Account not found"));
 
-        // 2. เพิ่มเงินในบัญชี
+        // 2. เพิ่มจำนวนเงินเข้า balance แล้วบันทึก Account
         account.setBalance(account.getBalance() + amount);
         accountRepository.save(account);
 
-        // 3. บันทึกประวัติการฝากเงิน
-        DepositTransaction transaction = new DepositTransaction();
-        transaction.setAmount(amount);
-        transaction.setAccount(account);
-
+        // 3. สร้าง DepositTransaction ผูกกับ Account นั้น แล้วบันทึกลง Database
+        DepositTransaction transaction = new DepositTransaction(amount, account);
         depositRepository.save(transaction);
     }
 }
