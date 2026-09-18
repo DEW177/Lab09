@@ -1,11 +1,12 @@
 package com.example.lab09.service;
 
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.example.lab09.model.Account;
 import com.example.lab09.model.DepositTransaction;
 import com.example.lab09.repository.AccountRepository;
 import com.example.lab09.repository.DepositRepository;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class DepositService {
@@ -31,5 +32,8 @@ public class DepositService {
         // 3. สร้าง DepositTransaction ผูกกับ Account นั้น แล้วบันทึกลง Database
         DepositTransaction transaction = new DepositTransaction(amount, account);
         depositRepository.save(transaction);
+
+        
+        
     }
 }
